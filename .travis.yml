@@ -1,8 +1,13 @@
-sudo: false
+dist: trusty
+sudo: required
+addons:
+  chrome: stable
 language: python
 python:
   - "2.7"
   - "3.5"
+env:
+  - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 install:
   - pip install --upgrade pip
   - pip install codecov
@@ -13,5 +18,15 @@ script:
 branches:
   only:
     - master
+    - "/^\\d+\\.\\d+(\\.\\d+)?(-\\S*)?$/"
 after_success:
   - codecov
+deploy:
+  provider: pypi
+  user: edx
+  password:
+    secure: KbUS3SFk6sRBPVPsNzKOiGoDGdmGXWtuOh6aKkB+OUYTKU7m36Ms/wTyhNcgBFMERZcsr3CPLS9lVuo/EJC7PR1PXQ3jM6luNFMieg09YjkZL8yIj8M3E6OnUsOOv3PQhECrjcThM7DG2mfW2PE69US4E3XEqcvVXxzLj4sMZmbRuz2ZcAl5gy5FNmsCsGRyTvbTMxAb3umPHFLOT2LgS7pL6tzqZu/umyvyErCcczBdyhBy78r+gvUbYtWVcq7EN3sauCB8jmH76KJLcqP94cpVpT3t6kbECPrI/BBa73+znRidg49lxIGHi7cpR9oU4aXCXt7OlMbsiOBI0V62vfjrJYnxpWJCagzoDEmiJlZDRop6T9ac6FphadQwQXOiMAMlMDvZGfeR18DHIhB4NJHQWx1qHfvROMnp4Mzby6gIFwlqnyxAGIZ06PxaY0VvZZPr/213IqHCKsgGEiw26AOqdOJDFcMuQssWEDKG5jyWIULew0ECjosT0qq3PENn/AYxNPDeROMlxRD0ZDpKE24FmEmwtW+JaYGBaONjBev3xFZLi7qT2ezRtYVxy7bGN2pVBPwHUFsM3s5Qznn69J7cvveAgWuAXpTMi2pqSxMZtkmGURanwj4Fiq0O6NYlo8TtOoh7+KFPXD7WzmEI8yK/eqdC6yQm96oRSyt8iTc=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    python: "3.5"
